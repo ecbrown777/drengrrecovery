@@ -1,0 +1,2 @@
+# Redirect www to root domain
+https://www.drengrrecoverysolutions.com/* https://drengrrecoverysolutions.com/:splat 301!
