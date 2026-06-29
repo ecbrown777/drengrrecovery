@@ -3,7 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Drengr Recovery Solutions LLC</title>
+<title>Drengr Recovery Solutions LLC | Surplus Funds Recovery</title>
+<meta name="description" content="Drengr Recovery Solutions pursues unclaimed surplus funds from foreclosure and tax sales on your behalf — no upfront cost, no recovery no fee. Serving 45+ states nationwide from Orange County, California.">
+<meta name="keywords" content="surplus funds recovery, excess proceeds, foreclosure overage, tax sale surplus, unclaimed funds, Orange County California">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.drengrrecoverysolutions.com/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Drengr Recovery Solutions LLC | Surplus Funds Recovery">
+<meta property="og:description" content="Your money is waiting to be claimed. We pursue surplus funds from foreclosure and tax sales on your behalf — no upfront cost. Serving 45+ states nationwide.">
+<meta property="og:url" content="https://www.drengrrecoverysolutions.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Drengr Recovery Solutions LLC">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Drengr Recovery Solutions LLC | Surplus Funds Recovery">
+<meta name="twitter:description" content="Your money is waiting to be claimed. We pursue surplus funds from foreclosure and tax sales on your behalf — no upfront cost. Serving 45+ states nationwide.">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -382,8 +399,8 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
         <h2 class="section-title">Find out if you have a claim</h2>
         <p>Send us your information and we will review public records at no cost. If funds exist, we will tell you exactly what we found and what the next step looks like. No pressure, no obligation.</p>
         <div class="contact-info">
-          <div class="contact-row"><span>Phone</span><span>[Phone placeholder]</span></div>
-          <div class="contact-row"><span>Email</span><span>[Email placeholder]</span></div>
+          <div class="contact-row"><span>Phone</span><span><a href="tel:9493318520" style="color:inherit;text-decoration:none">(949) 331-8520</a></span></div>
+          <div class="contact-row"><span>Email</span><span><a href="mailto:services@drengrrecoverysolutions.com" style="color:inherit;text-decoration:none">services@drengrrecoverysolutions.com</a></span></div>
           <div class="contact-row"><span>Office</span><span>Orange County, California</span></div>
           <div class="contact-row"><span>Serving</span><span>Every county within our 45-plus state coverage area</span></div>
         </div>
@@ -468,8 +485,42 @@ document.getElementById('state-notes-toggle').addEventListener('click',()=>{
   icon.classList.toggle('open',open);
 });
 
-document.getElementById('submit-btn').addEventListener('click',function(){
-  document.getElementById('contact-form').innerHTML=`<div style="padding:40px 0;text-align:center"><div style="width:52px;height:52px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:20px;color:var(--gold)">&#10003;</div><h3 style="font-family:'Playfair Display',serif;font-size:20px;color:var(--white);margin-bottom:10px">Review request received</h3><p style="font-size:13px;color:var(--text-m);line-height:1.75;max-width:320px;margin:0 auto">We'll research your case and follow up within one business day with what we found and whether a claim exists.</p></div>`;
+document.getElementById('submit-btn').addEventListener('click', async function() {
+  const form = document.getElementById('contact-form');
+  const btn = this;
+
+  // Gather fields
+  const inputs = form.querySelectorAll('input, select, textarea');
+  const data = { access_key: 'f139a1e8-dba5-4716-9ba8-87f4c90599d6', subject: 'New Drengr Claim Review Request' };
+  const labels = ['first_name','last_name','email','phone','property_address','claimant_type','message'];
+  inputs.forEach((el, i) => { data[labels[i] || 'field_'+i] = el.value; });
+
+  // Basic validation
+  if (!data.email || !data.first_name) {
+    alert('Please enter at least your first name and email address.');
+    return;
+  }
+
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if (json.success) {
+      form.innerHTML = `<div style="padding:40px 0;text-align:center"><div style="width:52px;height:52px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:20px;color:var(--gold)">&#10003;</div><h3 style="font-family:'Playfair Display',serif;font-size:20px;color:var(--white);margin-bottom:10px">Review request received</h3><p style="font-size:13px;color:var(--text-m);line-height:1.75;max-width:320px;margin:0 auto">We'll research your case and follow up within one business day with what we found and whether a claim exists.</p></div>`;
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch(e) {
+    btn.textContent = 'Submit for Free Review →';
+    btn.disabled = false;
+    alert('Something went wrong. Please email us directly at services@drengrrecoverysolutions.com or call (949) 331-8520.');
+  }
 });
 
 const hamburger=document.getElementById('hamburger');
