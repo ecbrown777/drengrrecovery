@@ -427,8 +427,22 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
             </select>
           </div>
           <div class="form-field"><label>Additional details (optional)</label><textarea placeholder="Any context about the property, sale, or how you heard about us..."></textarea></div>
+
+          <div class="form-field" style="margin-top:6px">
+            <label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:12px;color:var(--text-m);line-height:1.6;cursor:pointer;text-transform:none;letter-spacing:0">
+              <input type="checkbox" id="sms-consent-trans" style="margin-top:3px;flex:0 0 auto;accent-color:var(--gold);width:16px;height:16px">
+              <span>I agree to receive transactional text messages from Drengr Recovery Solutions LLC about my inquiry or claim (status updates, document requests, reminders). Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span>
+            </label>
+          </div>
+          <div class="form-field" style="margin-top:0">
+            <label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:12px;color:var(--text-m);line-height:1.6;cursor:pointer;text-transform:none;letter-spacing:0">
+              <input type="checkbox" id="sms-consent-mktg" style="margin-top:3px;flex:0 0 auto;accent-color:var(--gold);width:16px;height:16px">
+              <span>I agree to receive marketing &amp; promotional text messages from Drengr Recovery Solutions LLC. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span>
+            </label>
+          </div>
+
           <button class="form-submit" id="submit-btn">Submit for Free Review &rarr;</button>
-          <p class="form-note">We respond within one business day. Your information is kept strictly confidential.</p>
+          <p class="form-note">We respond within one business day. Your information is kept strictly confidential. By submitting, you agree to our <a href="/privacy.html" style="color:var(--gold);text-decoration:none">Privacy Policy</a> and <a href="/terms.html" style="color:var(--gold);text-decoration:none">Terms of Service</a>. Mobile information is never shared with third parties for marketing.</p>
         </div>
       </div>
     </div>
@@ -446,8 +460,10 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
       <li><a href="#why">Why Drengr</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="/privacy.html">Privacy Policy</a></li>
+      <li><a href="/terms.html">Terms of Service</a></li>
     </ul>
-    <p class="footer-note">&copy; 2025 Drengr Recovery Solutions LLC. Drengr is not a law firm and does not provide legal advice. Where legal representation is required, we coordinate with licensed attorneys from our nationwide network.</p>
+    <p class="footer-note">&copy; 2026 Drengr Recovery Solutions LLC. Drengr is not a law firm and does not provide legal advice. Where legal representation is required, we coordinate with licensed attorneys from our nationwide network.</p>
   </div>
 </footer>
 
@@ -490,11 +506,16 @@ document.getElementById('submit-btn').addEventListener('click', async function()
   const form = document.getElementById('contact-form');
   const btn = this;
 
-  // Gather fields
-  const inputs = form.querySelectorAll('input, select, textarea');
+  // Gather fields (checkboxes handled separately below)
+  const inputs = form.querySelectorAll('input:not([type="checkbox"]), select, textarea');
   const data = { access_key: 'f139a1e8-dba5-4716-9ba8-87f4c90599d6', subject: 'New Drengr Claim Review Request' };
   const labels = ['first_name','last_name','email','phone','property_address','claimant_type','message'];
   inputs.forEach((el, i) => { data[labels[i] || 'field_'+i] = el.value; });
+
+  // SMS consent — captured explicitly as opt-in proof
+  data.sms_transactional_consent = document.getElementById('sms-consent-trans').checked ? 'Yes' : 'No';
+  data.sms_marketing_consent = document.getElementById('sms-consent-mktg').checked ? 'Yes' : 'No';
+  data.consent_captured_at = new Date().toISOString();
 
   // Basic validation
   if (!data.email || !data.first_name) {
