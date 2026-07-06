@@ -19,7 +19,7 @@ CRM: GoHighLevel / LeadConnector.
 - _redirects blocks /worker/* from public download.
 
 ## OPEN ITEMS — verify before A2P submission
-1. [IN PROGRESS] Form->GHL wiring DONE in code (worker forwards server-side, browser direct-post fallback). REMAINING: create GHL Inbound Webhook workflow, paste URL into index.html GHL_WEBHOOK_URL const AND wrangler secret, map fields + consent tag branches in GHL.
+1. [BLOCKER] Contact form posts to Cloudflare Worker -> Web3Forms (email + D1 log ONLY).
    It does NOT create GHL contacts or pass consent tags to GHL. The GHL chat widget is a
    SEPARATE lead path. Consent selections from the form never reach the system that sends SMS.
    FIX: point the form at GHL (inbound webhook or GHL form API) so marketing/non-marketing

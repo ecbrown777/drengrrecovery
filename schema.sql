@@ -90,37 +90,6 @@ export default {
           body.page_url || null
         ).run();
 
-        // Forward to GoHighLevel inbound webhook (server-side, no CORS issues).
-        // Consent tags MUST reach GHL — it is the system that sends SMS.
-        let ghlOk = false;
-        if (env.GHL_WEBHOOK_URL) {
-          try {
-            const ghlRes = await fetch(env.GHL_WEBHOOK_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                first_name: body.first_name || '',
-                last_name: body.last_name || '',
-                email: body.email || '',
-                phone: phone || '',
-                property_address: body.property_address || '',
-                claimant_type: body.claimant_type || '',
-                message: body.message || '',
-                sms_consent_marketing: body.sms_consent_marketing === true ? 'yes' : 'no',
-                sms_consent_nonmarketing: body.sms_consent_nonmarketing === true ? 'yes' : 'no',
-                consent_timestamp: now,
-                consent_text_marketing: body.sms_consent_marketing_text || '',
-                consent_text_nonmarketing: body.sms_consent_nonmarketing_text || '',
-                ip_address: ip,
-                page_url: body.page_url || '',
-                source: 'website-contact-form',
-                lead_id: String(leadId),
-              }),
-            });
-            ghlOk = ghlRes.ok;
-          } catch (e) { /* browser will retry direct if ghl:false */ }
-        }
-
         // Forward to Web3Forms for email notification (non-blocking failure)
         try {
           await fetch('https://api.web3forms.com/submit', {
@@ -143,7 +112,7 @@ export default {
           });
         } catch (e) { /* email failure must not lose the lead; it's in D1 */ }
 
-        return json({ ok: true, lead_id: leadId, ghl: ghlOk }, 200, origin);
+        return json({ ok: true, lead_id: leadId }, 200, origin);
       } catch (e) {
         return json({ ok: false, error: 'Database error' }, 500, origin);
       }
