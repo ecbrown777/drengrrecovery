@@ -112,6 +112,41 @@ export default {
           });
         } catch (e) { /* email failure must not lose the lead; it's in D1 */ }
 
+        // Forward to GHL inbound webhook so consent tags reach the CRM that sends SMS
+        // (non-blocking failure; the lead is already safe in D1)
+        if (env.GHL_WEBHOOK_URL) {
+          try {
+            const tags = [];
+            if (body.sms_consent_marketing === true) tags.push('sms-consent-marketing');
+            if (body.sms_consent_nonmarketing === true) tags.push('sms-consent-nonmarketing');
+            if (body.sms_consent_marketing !== true && body.sms_consent_nonmarketing !== true) {
+              tags.push('sms-consent-none');
+            }
+
+            await fetch(env.GHL_WEBHOOK_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                first_name: body.first_name || '',
+                last_name: body.last_name || '',
+                email: body.email || '',
+                phone: phone || '',
+                property_address: body.property_address || '',
+                claimant_type: body.claimant_type || '',
+                message: body.message || '',
+                source: 'drengr-website-form',
+                lead_id: leadId,
+                sms_consent_marketing: body.sms_consent_marketing === true,
+                sms_consent_nonmarketing: body.sms_consent_nonmarketing === true,
+                sms_consent_marketing_text: body.sms_consent_marketing_text || '',
+                sms_consent_nonmarketing_text: body.sms_consent_nonmarketing_text || '',
+                consent_timestamp: now,
+                tags,
+              }),
+            });
+          } catch (e) { /* GHL forward failure must not lose the lead; it's in D1 */ }
+        }
+
         return json({ ok: true, lead_id: leadId }, 200, origin);
       } catch (e) {
         return json({ ok: false, error: 'Database error' }, 500, origin);

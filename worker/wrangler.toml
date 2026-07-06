@@ -11,8 +11,9 @@ routes = [
 [[d1_databases]]
 binding = "DB"
 database_name = "drengr-leads"
-database_id = "REPLACE_AFTER_CREATE"
+database_id = "c3755621-7fac-448d-be48-5b5557e09d2b"
 
 # Secrets (set via CLI, never commit):
 #   npx wrangler secret put WEB3FORMS_KEY
 #   npx wrangler secret put ADMIN_KEY
+#   npx wrangler secret put GHL_WEBHOOK_URL   (optional — GHL forward is skipped if unset)
