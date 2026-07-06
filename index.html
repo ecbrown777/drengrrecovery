@@ -35,7 +35,7 @@
   "name": "Drengr Recovery Solutions LLC",
   "url": "https://www.drengrrecoverysolutions.com/",
   "email": "info@drengrrecoverysolutions.com",
-  "telephone": "+1-949-331-8520",
+  "telephone": "+1-949-449-2708",
   "description": "Surplus funds recovery from foreclosure and tax sales. No upfront cost, no recovery no fee.",
   "areaServed": "US",
   "address": {
@@ -481,7 +481,7 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
         <h2 class="section-title">Find out if you have a claim</h2>
         <p>Send us your information and we will review public records at no cost. If funds exist, we will tell you exactly what we found and what the next step looks like. No pressure, no obligation.</p>
         <div class="contact-info">
-          <div class="contact-row"><span>Phone</span><span><a href="tel:9493318520" style="color:inherit;text-decoration:none">(949) 331-8520</a></span></div>
+          <div class="contact-row"><span>Phone</span><span><a href="tel:9494492708" style="color:inherit;text-decoration:none">(949) 449-2708</a></span></div>
           <div class="contact-row"><span>Email</span><span><a href="mailto:info@drengrrecoverysolutions.com" style="color:inherit;text-decoration:none">info@drengrrecoverysolutions.com</a></span></div>
           <div class="contact-row"><span>Office</span><span>Orange County, California</span></div>
           <div class="contact-row"><span>Serving</span><span>Every county within our 45-plus state coverage area</span></div>
@@ -580,6 +580,32 @@ document.getElementById('state-notes-toggle').addEventListener('click',()=>{
   icon.classList.toggle('open',open);
 });
 
+// GoHighLevel inbound webhook (Automation > Workflows > trigger "Inbound Webhook").
+// Paste the URL GHL gives you here AND set it as the Worker secret GHL_WEBHOOK_URL.
+const GHL_WEBHOOK_URL = 'PASTE_GHL_INBOUND_WEBHOOK_URL_HERE';
+
+// Direct browser -> GHL post. Used only when the Worker path didn't deliver to GHL.
+// Tries a normal CORS fetch first; if blocked, falls back to a no-cors
+// fire-and-forget (response unreadable, but the payload is still delivered
+// if GHL accepts text/plain JSON bodies).
+async function postToGHL(payload) {
+  if (!GHL_WEBHOOK_URL || GHL_WEBHOOK_URL.indexOf('PASTE_') === 0) return false;
+  const body = JSON.stringify({
+    ...payload,
+    sms_consent_marketing: payload.sms_consent_marketing ? 'yes' : 'no',
+    sms_consent_nonmarketing: payload.sms_consent_nonmarketing ? 'yes' : 'no',
+    consent_timestamp: new Date().toISOString(),
+    source: 'website-contact-form-direct'
+  });
+  try {
+    const r = await fetch(GHL_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+    return r.ok;
+  } catch(e) {
+    try { await fetch(GHL_WEBHOOK_URL, { method: 'POST', mode: 'no-cors', body }); } catch(e2) {}
+    return false; // unknown outcome under no-cors
+  }
+}
+
 document.getElementById('submit-btn').addEventListener('click', async function() {
   const form = document.getElementById('contact-form');
   const btn = this;
@@ -617,10 +643,20 @@ document.getElementById('submit-btn').addEventListener('click', async function()
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    if (res.ok) { const j = await res.json(); if (j.ok) { success(); return; } }
+    if (res.ok) {
+      const j = await res.json();
+      if (j.ok) {
+        // Worker stored the lead. If its server-side GHL forward failed
+        // (or GHL_WEBHOOK_URL secret not set), retry direct from the browser.
+        if (!j.ghl) postToGHL(data);
+        success(); return;
+      }
+    }
     throw new Error('worker unavailable');
   } catch(e) {
-    // Fallback: direct Web3Forms so no lead is ever lost
+    // Worker path failed entirely: push consent to GHL directly, then
+    // fall back to Web3Forms so no lead is ever lost.
+    postToGHL(data);
     try {
       const res2 = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -639,7 +675,7 @@ document.getElementById('submit-btn').addEventListener('click', async function()
     } catch(e2) {
       btn.textContent = 'Submit for Free Review →';
       btn.disabled = false;
-      alert('Something went wrong. Please email us directly at info@drengrrecoverysolutions.com or call (949) 331-8520.');
+      alert('Something went wrong. Please email us directly at info@drengrrecoverysolutions.com or call (949) 449-2708.');
     }
   }
 });
@@ -649,5 +685,7 @@ const mobileMenu=document.getElementById('mobile-menu');
 hamburger.addEventListener('click',()=>mobileMenu.classList.toggle('open'));
 function closeMobileMenu(){mobileMenu.classList.remove('open')}
 </script>
+<!-- GoHighLevel / LeadConnector chat widget -->
+<script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="6a4bee70c1e521454a0a2a9b" data-source="WEB_USER"></script>
 </body>
 </html>

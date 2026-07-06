@@ -36,6 +36,16 @@ Static single-page site + Cloudflare Worker/D1 consent backend. Deploy target: G
 - ACTION REQUIRED: STOP number is set to (949) 331-8520 (your voice line) as placeholder. If your 10DLC texting number is DIFFERENT, replace "(949) 331-8520" in the terms.html opt-out clause AND the form checkboxes with the actual sending number, or STOP routing won't match.
 - Still pending from update #2: non-marketing checkbox use-case must match registered campaign verbatim; confirm legal name matches CP 575/147C or declare DBA.
 
+## 2026-07-06 update #4: SMS number set to (949) 449-2708
+- New dedicated 10DLC SMS number: (949) 449-2708. Updated SMS-context references only: terms.html opt-out clause (text STOP to 449-2708) and privacy.html SMS opt-out line.
+- LEFT AS-IS (voice/general contact): JSON-LD telephone, contact card phone, form-error phone, and both legal-page contact footers still show (949) 331-8520. This assumes 449-2708 is SMS-ONLY and 331-8520 remains the voice line. If 449-2708 replaces the voice line entirely, swap all six occurrences.
+- CRM is GoHighLevel / LeadConnector (chat widget loader.js present). A2P registration and consent enforcement happen in GHL, not the website.
+
+## 2026-07-06 update #5: full number swap + GHL chat widget
+- (949) 449-2708 is now the single voice+SMS number. ALL references swapped across index.html, terms.html, privacy.html (JSON-LD telephone, tel: links, contact cards, form-error text, SMS opt-out clauses, legal footers). 331-8520 fully removed.
+- GHL/LeadConnector chat widget (data-widget-id 6a4bee70c1e521454a0a2a9b) inserted immediately before </body> on all three pages, so it appears site-wide. No CSP in _headers, so it loads unblocked.
+- If the site's own contact form and the GHL chat widget both capture leads, decide which is the system of record. Ideally the contact form should also post into GHL (webhook/API) so consent tags reach the CRM that sends SMS. Currently form -> Worker/Web3Forms (email only), widget -> GHL directly. These are two disconnected lead paths.
+
 ## KNOWN ISSUES / TODO
 1. Worker not confirmed deployed. Setup steps in deploy/README.md (wrangler d1 create, run schema, set secrets, deploy).
 2. Nav has no links to #legal or #celebrate sections (intentional - avoids crowding; reachable by scroll).

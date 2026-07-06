@@ -16,3 +16,4 @@ database_id = "REPLACE_AFTER_CREATE"
 # Secrets (set via CLI, never commit):
 #   npx wrangler secret put WEB3FORMS_KEY
 #   npx wrangler secret put ADMIN_KEY
+#   npx wrangler secret put GHL_WEBHOOK_URL   # GHL workflow Inbound Webhook URL
