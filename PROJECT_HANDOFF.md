@@ -11,7 +11,7 @@ Static single-page site + Cloudflare Worker/D1 consent backend. Deploy target: G
 - A2P/SMS compliance: consent checkbox on form (not pre-checked, not required), privacy.html + terms.html with A2P 10DLC disclosures, footer links.
 - Consent backend: deploy/worker/ - Cloudflare Worker (src/index.js) + D1 (schema.sql) + wrangler.toml. Form POSTs to /api/lead (writes consent record: timestamp, IP, UA, consent text), forwards to Web3Forms, falls back to Web3Forms direct if Worker down. Endpoints: /api/lead, /api/consent (admin), /api/revoke (STOP handling).
 - SEO: sitemap.xml, robots.txt, JSON-LD LocalBusiness, canonical, OG/Twitter tags, Google Search Console verification meta.
-- Cloudflare: _headers (security headers + caching).
+- Cloudflare: _headers (security headers + caching), _redirects (302s /worker/* to homepage so Worker source isn't publicly downloadable from the Pages site).
 
 ## Keys/IDs
 - Web3Forms access key: f139a1e8-dba5-4716-9ba8-87f4c90599d6
