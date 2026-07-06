@@ -1,10 +1,18 @@
-/*
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
+name = "drengr-leads"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
 
-/favicon.ico
-  Cache-Control: public, max-age=604800
-/*.png
-  Cache-Control: public, max-age=604800
+# Route the API on your own domain so the form posts same-origin-ish
+routes = [
+  { pattern = "www.drengrrecoverysolutions.com/api/*", zone_name = "drengrrecoverysolutions.com" },
+  { pattern = "drengrrecoverysolutions.com/api/*", zone_name = "drengrrecoverysolutions.com" }
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "drengr-leads"
+database_id = "REPLACE_AFTER_CREATE"
+
+# Secrets (set via CLI, never commit):
+#   npx wrangler secret put WEB3FORMS_KEY
+#   npx wrangler secret put ADMIN_KEY
