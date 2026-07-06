@@ -1,0 +1,2 @@
+# Block public access to Worker source files (deployed separately via wrangler)
+/worker/* / 302
