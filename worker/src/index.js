@@ -75,14 +75,16 @@ export default {
         const leadId = leadResult.meta.last_row_id;
 
         await env.DB.prepare(
-          `INSERT INTO sms_consent (lead_id, consented, consent_timestamp, phone, consent_text, ip_address, user_agent, page_url)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+          `INSERT INTO sms_consent (lead_id, consented_marketing, consented_nonmarketing, consent_timestamp, phone, consent_text_marketing, consent_text_nonmarketing, ip_address, user_agent, page_url)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
         ).bind(
           leadId,
-          body.sms_consent === true ? 1 : 0,
+          body.sms_consent_marketing === true ? 1 : 0,
+          body.sms_consent_nonmarketing === true ? 1 : 0,
           now,
           phone,
-          body.consent_text || null,
+          body.sms_consent_marketing_text || null,
+          body.sms_consent_nonmarketing_text || null,
           ip,
           ua,
           body.page_url || null
@@ -103,7 +105,8 @@ export default {
               property_address: body.property_address,
               claimant_type: body.claimant_type,
               message: body.message,
-              sms_consent: body.sms_consent === true ? `YES - ${now}` : 'NO',
+              sms_consent_marketing: body.sms_consent_marketing === true ? `YES - ${now}` : 'NO',
+              sms_consent_nonmarketing: body.sms_consent_nonmarketing === true ? `YES - ${now}` : 'NO',
               lead_id: String(leadId),
             }),
           });

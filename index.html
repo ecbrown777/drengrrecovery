@@ -509,10 +509,15 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
           </div>
           <div class="form-field"><label>Additional details (optional)</label><textarea placeholder="Any context about the property, sale, or how you heard about us..."></textarea></div>
           <div class="form-field consent-field">
-            <label class="consent-label" style="display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.65;color:var(--text-m);text-transform:none;letter-spacing:0;font-weight:400;cursor:pointer">
-              <input type="checkbox" id="sms-consent" style="margin-top:3px;width:15px;height:15px;flex-shrink:0;accent-color:var(--gold)">
-              <span>By checking this box, I agree to receive text messages from Drengr Recovery Solutions LLC regarding my claim review and related account updates at the phone number provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of any purchase or service. See our <a href="/privacy.html" style="color:var(--gold)">Privacy Policy</a> and <a href="/terms.html" style="color:var(--gold)">Terms of Service</a>.</span>
+            <label class="consent-label" style="display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.6;color:var(--text-m);text-transform:none;letter-spacing:0;font-weight:400;cursor:pointer;margin-bottom:12px">
+              <input type="checkbox" id="sms-consent-marketing" style="margin-top:3px;width:15px;height:15px;flex-shrink:0;accent-color:var(--gold)">
+              <span>I consent to receive marketing text messages from Drengr Recovery Solutions LLC at the phone number provided. Frequency may vary. Message &amp; data rates may apply. Text HELP for assistance, reply STOP to opt out.</span>
             </label>
+            <label class="consent-label" style="display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.6;color:var(--text-m);text-transform:none;letter-spacing:0;font-weight:400;cursor:pointer">
+              <input type="checkbox" id="sms-consent-nonmarketing" style="margin-top:3px;width:15px;height:15px;flex-shrink:0;accent-color:var(--gold)">
+              <span>I consent to receive non-marketing text messages from Drengr Recovery Solutions LLC about my claim review status and related account updates. Message &amp; data rates may apply. Text HELP for assistance, reply STOP to opt out.</span>
+            </label>
+            <p style="font-size:11px;line-height:1.6;color:var(--text-m);margin-top:12px">Consent is not a condition of any service. See our <a href="/privacy.html" style="color:var(--gold)">Privacy Policy</a> and <a href="/terms.html" style="color:var(--gold)">Terms of Service</a>.</p>
           </div>
           <button class="form-submit" id="submit-btn">Submit for Free Review &rarr;</button>
           <p class="form-note">We respond within one business day. Your information is kept strictly confidential.</p>
@@ -584,9 +589,12 @@ document.getElementById('submit-btn').addEventListener('click', async function()
   const data = {};
   const labels = ['first_name','last_name','email','phone','property_address','claimant_type','message'];
   inputs.forEach((el, i) => { data[labels[i] || 'field_'+i] = el.value; });
-  const consentBox = document.getElementById('sms-consent');
-  data.sms_consent = !!(consentBox && consentBox.checked);
-  data.consent_text = consentBox ? consentBox.closest('label').innerText.trim() : '';
+  const mktBox = document.getElementById('sms-consent-marketing');
+  const nonMktBox = document.getElementById('sms-consent-nonmarketing');
+  data.sms_consent_marketing = !!(mktBox && mktBox.checked);
+  data.sms_consent_nonmarketing = !!(nonMktBox && nonMktBox.checked);
+  data.sms_consent_marketing_text = mktBox && mktBox.checked ? mktBox.closest('label').innerText.trim() : '';
+  data.sms_consent_nonmarketing_text = nonMktBox && nonMktBox.checked ? nonMktBox.closest('label').innerText.trim() : '';
   data.page_url = location.href;
 
   // Basic validation
@@ -621,7 +629,8 @@ document.getElementById('submit-btn').addEventListener('click', async function()
           access_key: 'f139a1e8-dba5-4716-9ba8-87f4c90599d6',
           subject: 'New Drengr Claim Review Request (FALLBACK - no D1 record)',
           ...data,
-          sms_consent: data.sms_consent ? 'YES - ' + new Date().toISOString() : 'NO'
+          sms_consent_marketing: data.sms_consent_marketing ? 'YES - ' + new Date().toISOString() : 'NO',
+          sms_consent_nonmarketing: data.sms_consent_nonmarketing ? 'YES - ' + new Date().toISOString() : 'NO'
         })
       });
       const json2 = await res2.json();

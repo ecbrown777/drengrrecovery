@@ -15,10 +15,12 @@ CREATE TABLE IF NOT EXISTS leads (
 CREATE TABLE IF NOT EXISTS sms_consent (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   lead_id INTEGER REFERENCES leads(id),
-  consented INTEGER NOT NULL,            -- 1 = yes, 0 = no
+  consented_marketing INTEGER NOT NULL DEFAULT 0,      -- 1 = yes, 0 = no
+  consented_nonmarketing INTEGER NOT NULL DEFAULT 0,   -- 1 = yes, 0 = no
   consent_timestamp TEXT NOT NULL,       -- ISO8601, server-side
   phone TEXT,
-  consent_text TEXT,                     -- exact disclosure shown at time of consent
+  consent_text_marketing TEXT,           -- exact marketing disclosure shown at time of consent
+  consent_text_nonmarketing TEXT,        -- exact non-marketing disclosure shown at time of consent
   ip_address TEXT,
   user_agent TEXT,
   page_url TEXT,
