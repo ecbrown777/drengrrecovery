@@ -46,11 +46,27 @@ Static single-page site + Cloudflare Worker/D1 consent backend. Deploy target: G
 - GHL/LeadConnector chat widget (data-widget-id 6a4bee70c1e521454a0a2a9b) inserted immediately before </body> on all three pages, so it appears site-wide. No CSP in _headers, so it loads unblocked.
 - If the site's own contact form and the GHL chat widget both capture leads, decide which is the system of record. Ideally the contact form should also post into GHL (webhook/API) so consent tags reach the CRM that sends SMS. Currently form -> Worker/Web3Forms (email only), widget -> GHL directly. These are two disconnected lead paths.
 
+## 2026-07-06 update #6: Worker/D1 deployed and verified
+- Ran the setup from deploy/README.md: `wrangler d1 create drengr-leads` (id
+  c3755621-7fac-448d-be48-5b5557e09d2b, put in wrangler.toml), `wrangler d1 execute --remote
+  --file=schema.sql` (leads + sms_consent tables live), `wrangler secret put WEB3FORMS_KEY`,
+  `wrangler secret put ADMIN_KEY` (random 64-char hex, shown to user once, not stored in repo),
+  then `wrangler deploy`. GHL_WEBHOOK_URL deliberately left unset (form->GHL wiring is still
+  open item 1).
+- Deployed routes: www.drengrrecoverysolutions.com/api/* and drengrrecoverysolutions.com/api/*.
+- Verified live: POST to /api/lead with dummy data returned {"ok":true,"lead_id":1}; confirmed
+  matching rows in both D1 tables via `wrangler d1 execute --remote`. That dummy row is still in
+  the production DB by the user's choice (not deleted).
+- Local gotcha: `wrangler deploy`/`d1 execute` failed intermittently with a generic "fetch
+  failed" (looked like IPv6 connectivity flakiness on this network). Fixed by running with
+  `NODE_OPTIONS=--dns-result-order=ipv4first`. Not a Cloudflare account/config issue.
+
 ## KNOWN ISSUES / TODO
-1. Worker not confirmed deployed. Setup steps in deploy/README.md (wrangler d1 create, run schema, set secrets, deploy).
+1. ~~Worker not confirmed deployed.~~ DONE 2026-07-06 - deployed and verified, see update #6 above.
 2. Nav has no links to #legal or #celebrate sections (intentional - avoids crowding; reachable by scroll).
 3. Fonts: Google Fonts (Playfair Display, Inter) load from CDN on live site. Preview renders in sandbox show fallback fonts because CDN is blocked there - not a real issue.
 4. img-attorney.jpg background upscale (see above).
+5. Contact form still does not post to GHL (see NEXT_SESSION_START_HERE.md open item 1) - this is the next real task once the Worker/D1 groundwork above is confirmed stable.
 
 ## Deploy
 Push contents of deploy/ to repo root. Cloudflare Pages: no build command, output dir = root. Custom domain drengrrecoverysolutions.com + www.
