@@ -4,7 +4,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://widgets.leadconnectorhq.com https://stcdn.leadconnectorhq.com https://*.leadconnectorhq.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.leadconnectorhq.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com https://*.leadconnectorhq.com https://services.msgsndr.com https://*.msgsndr.com; frame-src https://*.leadconnectorhq.com; object-src 'none'; base-uri 'self'; form-action 'self' https://api.web3forms.com
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://widgets.leadconnectorhq.com https://stcdn.leadconnectorhq.com https://*.leadconnectorhq.com https://static.cloudflareinsights.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.leadconnectorhq.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com https://*.leadconnectorhq.com https://services.msgsndr.com https://*.msgsndr.com https://challenges.cloudflare.com; frame-src https://*.leadconnectorhq.com https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self' https://api.web3forms.com
 
 /favicon.ico
   Cache-Control: public, max-age=604800
