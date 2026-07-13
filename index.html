@@ -529,6 +529,8 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
             </label>
             <p style="font-size:11px;line-height:1.6;color:var(--text-m);margin-top:12px">Consent is not a condition of any service. See our <a href="/privacy.html" style="color:var(--gold)">Privacy Policy</a> and <a href="/terms.html" style="color:var(--gold)">Terms of Service</a>.</p>
           </div>
+          <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAD1OIXyRsMnogEIp"></div>
           <button class="form-submit" id="submit-btn">Submit for Free Review &rarr;</button>
           <p class="form-note">We respond within one business day. Your information is kept strictly confidential.</p>
         </div>
@@ -597,6 +599,7 @@ document.getElementById('submit-btn').addEventListener('click', async function()
   // Gather fields
   const inputs = form.querySelectorAll('input:not([type=checkbox]), select, textarea');
   const data = {};
+  data.turnstile_token = (document.querySelector('[name="cf-turnstile-response"]') || {}).value || '';
   const labels = ['first_name','last_name','email','phone','property_address','claimant_type','message'];
   inputs.forEach((el, i) => { data[labels[i] || 'field_'+i] = el.value; });
   const mktBox = document.getElementById('sms-consent-marketing');
