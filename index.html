@@ -86,12 +86,14 @@ h2.section-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,4
 section{padding:72px 0}
 
 .panel{background:rgba(40,44,52,0.80);border:1px solid rgba(255,255,255,.10);border-radius:8px;padding:32px 30px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);box-shadow:0 12px 36px rgba(0,0,0,.35)}
-.hero{min-height:100vh;display:flex;align-items:center;padding:96px 0 64px;background:linear-gradient(180deg,rgba(21,23,28,0.55) 0%,rgba(21,23,28,0) 22%),url('/hero-cityscape.jpg');background-size:cover;background-position:center;position:relative}
+.hero{min-height:100vh;display:flex;align-items:flex-start;padding:96px 0 64px;background:linear-gradient(180deg,rgba(21,23,28,0.55) 0%,rgba(21,23,28,0) 22%),url('/hero-cityscape.jpg');background-size:cover;background-position:center;position:relative}
 .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--border-d)}
-.hero-inner{max-width:1060px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:1fr 340px;gap:64px;align-items:center}
+.hero-inner{max-width:1060px;margin:0;padding:0 5%}
+.hero-combined{display:grid;grid-template-columns:1fr 260px;gap:0;max-width:760px;background:rgba(40,44,52,0.45);border:1px solid rgba(255,255,255,.12);border-radius:10px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.hero-left{padding:32px 30px}
 .hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:22px}
 .hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,54px);font-weight:700;line-height:1.1;color:var(--white);margin-bottom:22px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(46px,7vw,76px);font-weight:700;line-height:1.05;color:var(--white);margin-bottom:22px}
 .hero h1 em{font-style:italic;color:var(--gold-light)}
 .hero-desc{font-size:16px;line-height:1.8;color:var(--text-m);max-width:500px;margin-bottom:36px}
 .hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
@@ -99,10 +101,10 @@ section{padding:72px 0}
 .btn-primary:hover{box-shadow:0 6px 24px rgba(230,138,46,.42);transform:translateY(-2px)}
 .btn-ghost{display:inline-flex;align-items:center;gap:6px;color:var(--text-d);font-size:13px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:2px;transition:color .2s,border-color .2s}
 .btn-ghost:hover{color:var(--white);border-color:var(--white)}
-.hero-card{background:rgba(40,44,52,0.82);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:32px 28px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.hero-right{padding:32px 24px;border-left:1px solid rgba(255,255,255,.14)}
 .hero-stat-row{display:flex;flex-direction:column;gap:24px}
 .hero-stat{border-left:2px solid var(--gold);padding-left:18px}
-.stat-num{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:var(--white);line-height:1;margin-bottom:4px}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,54px);font-weight:700;color:var(--white);line-height:1;margin-bottom:4px}
 .stat-label{font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text-m);text-transform:uppercase}
 .card-divider{height:1px;background:var(--border-d);margin:24px 0}
 .card-footer{font-size:12px;color:var(--text-m);line-height:1.65}
@@ -217,11 +219,12 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
   .nav-hamburger{display:flex}
   section{padding:52px 0}
   .hero{min-height:auto;padding:48px 0 52px}
-  .hero-inner{grid-template-columns:1fr;gap:36px}
-  .hero-card{padding:24px 20px}
+  .hero-combined{grid-template-columns:1fr;gap:0;max-width:100%}
+  .hero-left,.hero-right{padding:24px 20px}
+  .hero-right{border-left:none;border-top:1px solid rgba(255,255,255,.14)}
   .hero-stat-row{flex-direction:row;gap:0;justify-content:space-between}
   .hero-stat{padding-left:14px}
-  .stat-num{font-size:26px}
+  .stat-num{font-size:32px}
   .card-divider{display:none}
   .card-footer{display:none}
   .steps{grid-template-columns:1fr 1fr;gap:14px}
@@ -270,32 +273,34 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
 
 <section class="hero" id="top">
   <div class="hero-inner">
-    <div class="panel">
-      <div class="hero-eyebrow">Nationwide Surplus Funds Recovery</div>
-      <h1>Your money is<br>waiting to be<br><em>claimed.</em></h1>
-      <p class="hero-desc">When a foreclosed property sells for more than what was owed, the difference belongs to you — not the county. Drengr Recovery Solutions pursues those funds on your behalf, start to finish, at no upfront cost.</p>
-      <div class="hero-actions">
-        <a href="#contact" class="btn-primary">Start a Free Review &rarr;</a>
-        <a href="#how" class="btn-ghost">See how it works</a>
-      </div>
-    </div>
-    <div class="hero-card">
-      <div class="hero-stat-row">
-        <div class="hero-stat">
-          <div class="stat-num">$0</div>
-          <div class="stat-label">Upfront cost to claimants</div>
-        </div>
-        <div class="hero-stat">
-          <div class="stat-num">45+</div>
-          <div class="stat-label">States covered nationwide</div>
-        </div>
-        <div class="hero-stat">
-          <div class="stat-num">100%</div>
-          <div class="stat-label">Contingency-based fees</div>
+    <div class="hero-combined">
+      <div class="hero-left">
+        <div class="hero-eyebrow">Nationwide Surplus Funds Recovery</div>
+        <h1>Your money is<br>waiting to be<br><em>claimed.</em></h1>
+        <p class="hero-desc">When a foreclosed property sells for more than what was owed, the difference belongs to you — not the county. Drengr Recovery Solutions pursues those funds on your behalf, start to finish, at no upfront cost.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">Start a Free Review &rarr;</a>
+          <a href="#how" class="btn-ghost">See how it works</a>
         </div>
       </div>
-      <div class="card-divider"></div>
-      <div class="card-footer">Surplus funds are subject to strict legal claim windows. Most rights expire within 1–4 years. Time matters.</div>
+      <div class="hero-right">
+        <div class="hero-stat-row">
+          <div class="hero-stat">
+            <div class="stat-num">$0</div>
+            <div class="stat-label">Upfront cost to claimants</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-num">45+</div>
+            <div class="stat-label">States covered nationwide</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Contingency-based fees</div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-footer">Surplus funds are subject to strict legal claim windows. Most rights expire within 1–4 years. Time matters.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -527,11 +532,11 @@ footer{background:var(--navy-mid);border-top:1px solid var(--border-d);padding:4
               <input type="checkbox" id="sms-consent-nonmarketing" class="consent-check">
               <span>I consent to receive non-marketing text messages from Drengr Recovery Solutions LLC about my claim review status and related account updates. Message &amp; data rates may apply. Text HELP for assistance, reply STOP to opt out.</span>
             </label>
-             <p style="font-size:11px;line-height:1.6;color:var(--text-m);margin-top:12px">Consent is not a condition of any service. See our <a href="/privacy.html" style="color:var(--gold)">Privacy Policy</a> and <a href="/terms.html" style="color:var(--gold)">Terms of Service</a>.</p>
-           </div>
-           <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-           <div class="cf-turnstile" data-sitekey="0x4AAAAAAD1OIXyRsMnogEIp"></div>
-           <button class="form-submit" id="submit-btn">Submit for Free Review &rarr;</button>
+            <p style="font-size:11px;line-height:1.6;color:var(--text-m);margin-top:12px">Consent is not a condition of any service. See our <a href="/privacy.html" style="color:var(--gold)">Privacy Policy</a> and <a href="/terms.html" style="color:var(--gold)">Terms of Service</a>.</p>
+          </div>
+          <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAD1OIXyRsMnogEIp"></div>
+          <button class="form-submit" id="submit-btn">Submit for Free Review &rarr;</button>
           <p class="form-note">We respond within one business day. Your information is kept strictly confidential.</p>
         </div>
       </div>
